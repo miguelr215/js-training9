@@ -1,19 +1,46 @@
 /**
- * Event listeners
+ * Event listeners & Passing arguments to functions
  * @link https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
  * @link https://developer.mozilla.org/en-US/docs/Web/Events
  */
 import backpackObjectArray from "./components/data.js";
 
+/**
+ * Add event listener to the lid-toggle button.
+ */
+const lidToggle = function (event, button, newArg) {
+  console.log(event)
+  console.log(newArg)
+   
+  // Find the current backpack object in backpackObjectArray
+  let backpackObject = backpackObjectArray.find( ({ id }) => id === button.parentElement.id );
+  
+  // Toggle lidOpen status
+  backpackObject.lidOpen == true 
+    ? backpackObject.lidOpen = false 
+    : backpackObject.lidOpen = true;
+
+  // Toggle button text
+  button.innerText == "Open lid" 
+    ? button.innerText = "Close lid" 
+    : button.innerText = "Open lid";
+
+  // Set visible property status text
+  let status = button.parentElement.querySelector(".backpack__lid span");
+  status.innerText == "closed"
+    ? (status.innerText = "open")
+    : (status.innerText = "closed");
+}
+
 const backpackList = backpackObjectArray.map((backpack) => {
+
   let backpackArticle = document.createElement("article");
   backpackArticle.classList.add("backpack");
   backpackArticle.setAttribute("id", backpack.id);
-  console.log(backpack.image);
 
   backpackArticle.innerHTML = `
     <figure class="backpack__image">
-      <img src="${backpack.image}" alt="${backpack.name}" loading="lazy" />
+      <img src=${backpack.image} alt="" loading="lazy" />
     </figure>
     <h1 class="backpack__name">${backpack.name}</h1>
     <ul class="backpack__features">
@@ -39,20 +66,22 @@ const backpackList = backpackObjectArray.map((backpack) => {
     </ul>
     <button class="lid-toggle">Open lid</button>
   `;
+  
+  let button = backpackArticle.querySelector(".lid-toggle");
+  let newArg = "The argument I want to pass to the callback function!"
 
-  const button = backpackArticle.querySelector(".lid-toggle");
-  const status = backpackArticle.querySelector(".backpack__lid span");
+  // Add event listener
   button.addEventListener("click", (event) => {
-      console.log(event);
-      button.innerText === "Open lid" ? button.innerText = "Close lid" : button.innerText = "Open lid";
-      status.innerText === "open" ? status.innerText = "closed" : status.innerText = "open";
+    lidToggle(event, button, newArg)
   })
 
   return backpackArticle;
 });
 
+// Append each backpack item to the main
 const main = document.querySelector(".maincontent");
 
 backpackList.forEach((backpack) => {
   main.append(backpack);
 });
+
