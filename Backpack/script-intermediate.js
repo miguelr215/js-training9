@@ -49,15 +49,23 @@ const newStrapLength = (strapArray) => {
 
     // Populate form with an input and a button
     lengthForm.innerHTML = `
-      <input type="number" name="${side}Length" id="${side}side" placeholder="New ${side} length">
+      <input type="number" name="${side}Length" placeholder="New ${side} length">
       <button>Update</button>
     `;
 
-    // add event listener for update button
-    let updateButton = lengthForm.querySelector(`#${side}side`);
-    updateButton.addEventListener("click", (event) =>{
+    // add event listener for form submit
+    lengthForm.addEventListener("submit", (event) => {
+        // stop form from reloading page
         event.preventDefault();
-        let updateValue = lengthForm.querySelector(`#${side}side`).value;
+
+        // get value from form input
+        let newValue = lengthForm.querySelector("input").value;
+
+        // set the value of the field
+        listElement.querySelector("span").innerHTML = `${newValue} inches`;
+
+        // clear form input
+        lengthForm.querySelector("input").value = "";
     })
 
     // Add form to the end of the list element
